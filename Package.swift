@@ -4,20 +4,27 @@
 import PackageDescription
 
 let package = Package(
-    name: "PrivacyReportGen",
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "PrivacyReportGen",
-            targets: ["PrivacyReportGen"]),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "PrivacyReportGen"),
-        .testTarget(
-            name: "PrivacyReportGenTests",
-            dependencies: ["PrivacyReportGen"]),
-    ]
+  name: "PrivacyReportGen",
+  platforms: [.macOS(.v14)],
+  products: [
+    .plugin(name: "PrivacyReport Generate", targets: ["PrivacyReport Generate"])
+  ],
+  targets: [
+    .plugin(
+      name: "PrivacyReport Generate",
+      capability: .command(
+        intent: .custom(
+          verb: "generate-privacy-report",
+          description: "Generate privacy report from xcarchive"),
+        permissions: [
+          .writeToPackageDirectory(reason: "Save generated privacy report if needed")
+        ]
+      )
+    ),
+    .target(name: "PrivacyReportGen"),
+    .testTarget(
+      name: "PrivacyReportGenTests",
+      dependencies: ["PrivacyReportGen"]
+    ),
+  ]
 )
