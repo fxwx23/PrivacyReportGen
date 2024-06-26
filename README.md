@@ -29,13 +29,14 @@ let package = Package(
 
 To generate a privacy report in JSON or plist format, run the following command plugin:
 ```bash
-$ swift package plugin generate-privacy-report --xcarchive-path '/path/to/your/App.xcarchive'
+$ swift package plugin --allow-writing-to-package-directory generate-privacy-report --xcarchive-path '/path/to/your/App.xcarchive'
 ```
 
 ### Command Options
 - `--xcarchive-path` : Specifies the path to the xcarchive file from which to generate the privacy report data. (Required)
 - `--json` : Specifies JSON as the output format for the generated privacy report. (default is plist)
-- `--output-directory` : Specifies the directory where the generated privacy report file will be saved. (default is package path) 
+- `--output-directory` : Specifies the directory where the generated privacy report file will be saved. (default is package path)
+  - If using this option, also include `--allow-writing-to-directory` to allow writing to the specified directory. 
 - `--report-name` : Specifies the name of the generated privacy report file. (default is `PrivacyReport` )
 
 ## Contributing
