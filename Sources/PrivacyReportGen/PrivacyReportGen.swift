@@ -23,18 +23,10 @@ public struct PrivacyReportGen {
 
   private let privacyManifestExplorer = PrivacyManifestExplorer()
   private let propertyListDecoder = PropertyListDecoder()
-  private let propertyListEncoder: PropertyListEncoder
-  private let jsonEncoder: JSONEncoder
   private let arguments: Arguments
 
   public init(arguments: Arguments) {
     self.arguments = arguments
-
-    self.propertyListEncoder = PropertyListEncoder()
-    self.propertyListEncoder.outputFormat = .xml
-
-    self.jsonEncoder = JSONEncoder()
-    self.jsonEncoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
   }
 
   public func generateReportFromXCArchive(at xcarchiveURL: URL) throws {
@@ -48,14 +40,18 @@ public struct PrivacyReportGen {
     let privacyReport = try PrivacyReport(manifestFiles: manifestFiles)
     switch arguments.outputFileType {
     case .plist:
-      let data = try propertyListEncoder.encode(privacyReport)
+      let encoder = PropertyListEncoder()
+      encoder.outputFormat = .xml
+      let data = try encoder.encode(privacyReport)
       let fileURL = URL(
         fileURLWithPath:
           "\(arguments.outputDirectoryPath)/\(arguments.reportName).\(arguments.outputFileType.rawValue)"
       )
       try data.write(to: fileURL)
     case .json:
-      let data = try jsonEncoder.encode(privacyReport)
+      let encoder = JSONEncoder()
+      encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+      let data = try encoder.encode(privacyReport)
       let fileURL = URL(
         fileURLWithPath:
           "\(arguments.outputDirectoryPath)/\(arguments.reportName).\(arguments.outputFileType.rawValue)"
